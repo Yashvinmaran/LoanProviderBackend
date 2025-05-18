@@ -1,0 +1,21 @@
+# Maven output
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+*.out
+
+# Git files
+.git
+.gitignore
+
+# IDE files
+*.iml
+.idea/
+.vscode/
