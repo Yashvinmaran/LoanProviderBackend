@@ -103,6 +103,16 @@ public class AdminServiceImpl implements AdminService {
         return ResponseEntity.ok(loan);
     }
 
+    @Override
+    public ResponseEntity<String> deleteLoan(String loanId) {
+        Optional<Loan> loanOpt = loanRepository.findById(loanId);
+        if (loanOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        loanRepository.deleteById(loanId);
+        return ResponseEntity.ok("Loan deleted successfully.");
+    }
+
     // User Management
 
     @Override

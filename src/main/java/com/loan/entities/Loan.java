@@ -18,6 +18,8 @@ public class Loan {
     private String userId;
     private String amount;
     private String type;
+    private long aadhar;
+    private String pan;
     private String duration;
     private String status;
     private LocalDateTime date;

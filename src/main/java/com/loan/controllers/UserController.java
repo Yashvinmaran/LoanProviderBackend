@@ -8,7 +8,6 @@ import com.loan.models.JwtResponse;
 import com.loan.services.UserService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,6 +41,12 @@ public class UserController {
         return userService.getUserByEmail(email);
     }
 
+    // Fallback method to handle /api/v1/user/{email} requests
+    @GetMapping("/{email}")
+    public ResponseEntity<User> getUserByEmailFallback(@PathVariable String email) {
+        return getUserByEmail(email);
+    }
+
     @PutMapping("/update/{email}")
     public ResponseEntity<User> updateUser(@PathVariable String email, @RequestBody User user) {
         return userService.updateUser(email, user);
@@ -70,13 +75,20 @@ public class UserController {
 
     // ================= LOANS =================
 
-    @PostMapping("/loan/apply/{userId}")
-    public ResponseEntity<String> applyLoan(@PathVariable String userId, @RequestBody Loan loan) {
-        return userService.applyLoan(userId, loan);
+    @PostMapping("/loan/apply/{email}")
+    public ResponseEntity<String> applyLoan(@PathVariable String email, @RequestBody Loan loan) {
+        return userService.applyLoan(email, loan);
     }
 
     @GetMapping("/loans/{userId}")
     public ResponseEntity<List<Loan>> getUserLoans(@PathVariable String userId) {
         return userService.getUserLoans(userId);
+    }
+
+    @GetMapping("/loan/status/{loanId}")
+    public ResponseEntity<String> getLoanStatus(@PathVariable String loanId) {
+        // Added logging for debugging
+        System.out.println("Fetching loan status for loanId: " + loanId);
+        return userService.getLoanStatus(loanId);
     }
 }

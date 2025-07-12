@@ -82,4 +82,10 @@ public class AdminController {
     public ResponseEntity<Loan> updateLoanStatus(@PathVariable String id, @RequestParam String status) {
         return adminService.updateLoanStatus(id, status);
     }
+
+    @DeleteMapping("/loan/delete/{loanId}")
+    public ResponseEntity<String> deleteLoan(@PathVariable String loanId) {
+        return adminService.deleteLoan(loanId);
+    }
+
 }

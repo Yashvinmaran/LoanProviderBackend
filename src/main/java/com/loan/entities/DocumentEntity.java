@@ -14,7 +14,7 @@ public class DocumentEntity {
     @Id
     private String documentId;
 
-    private String userId; // Optional, for quick lookup
+    private String userId;
     private String aadharFilePath;
     private String panFilePath;
 }

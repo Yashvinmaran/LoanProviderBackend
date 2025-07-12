@@ -1,22 +1,13 @@
-# Stage 1: Build the JAR using Maven
-FROM maven:3.9.6-eclipse-temurin-21 AS builder
+# Base image jisme Java 21 hai
+FROM eclipse-temurin:21-jdk-jammy
 
-WORKDIR /app
-COPY . .
+# App ki jar file ko container ke andar copy kiya gaya
+COPY target/loan-0.0.1-SNAPSHOT.jar app.jar
 
-# Build the app (skip tests for faster builds)
-RUN mvn clean package -DskipTests
 
-# Stage 2: Run the app
-FROM eclipse-temurin:21-jre
 
-WORKDIR /app
-
-# Copy the built jar from the builder stage
-COPY --from=builder /app/target/*.jar app.jar
-
-# Expose port 9090 (as your app runs on it)
+# Port expose karo (jo aapka Spring Boot app use karta hai)
 EXPOSE 9090
 
-# Start the Spring Boot application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Container start hone par ye command chalegi
+ENTRYPOINT ["java", "-jar", "/app.jar"]

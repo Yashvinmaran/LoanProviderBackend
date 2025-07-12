@@ -21,6 +21,7 @@ public interface AdminService {
     // Loan Management
     ResponseEntity<List<Loan>> getAllLoans();
     ResponseEntity<Loan> updateLoanStatus(String id, String status);
+    ResponseEntity<String> deleteLoan(String loanId);
 
     // User Management
     ResponseEntity<List<User>> getAllUsers();

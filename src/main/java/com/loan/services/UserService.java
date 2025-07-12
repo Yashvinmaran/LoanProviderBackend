@@ -25,6 +25,9 @@ public interface UserService {
     ResponseEntity<DocumentEntity> getDocuments(String userId);
 
     // Loan Management
-    ResponseEntity<String> applyLoan(String userId, Loan loan);
+    ResponseEntity<String> applyLoan(String email, Loan loan);
     ResponseEntity<List<Loan>> getUserLoans(String userId);
+
+    // Loan Status
+    ResponseEntity<String> getLoanStatus(String loanId);
 }

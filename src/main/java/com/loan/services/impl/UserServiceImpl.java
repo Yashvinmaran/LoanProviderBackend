@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         if (user == null || !user.getPassword().equals(request.getPassword())) {
             return ResponseEntity.status(401).body(null);
         }
-        String token = UUID.randomUUID().toString()+user.getEmail();
+        String token = UUID.randomUUID() +user.getEmail();
         return ResponseEntity.ok(new JwtResponse(token,user.getEmail()));
     }
 
@@ -114,11 +114,18 @@ public class UserServiceImpl implements UserService {
     }
 
     private String saveFile(MultipartFile file) throws IOException {
+        // Use absolute path for uploadDir to avoid Tomcat temp directory issues
         File directory = new File(uploadDir);
-        if(!directory.exists()){
-            directory.mkdirs();
+        if (!directory.isAbsolute()) {
+            directory = directory.getAbsoluteFile();
         }
-        log.info(directory.getAbsolutePath());
+        if (!directory.exists()) {
+            boolean created = directory.mkdirs();
+            if (!created) {
+                throw new IOException("Failed to create upload directory: " + directory.getAbsolutePath());
+            }
+        }
+        log.info("Saving file to directory: " + directory.getAbsolutePath());
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
         File dest = new File(directory, fileName);
         try {
@@ -133,9 +140,14 @@ public class UserServiceImpl implements UserService {
     // ============== LOAN MANAGEMENT ==================
 
     @Override
-    public ResponseEntity<String> applyLoan(String userId, Loan loan) {
-        loan.setUserId(userId);
-        loan.setStatus("PENDING");
+    public ResponseEntity<String> applyLoan(String email, Loan loan) {
+        loan.setUserId(email);
+        if (loan.getStatus() == null) {
+            loan.setStatus("PENDING");
+        }
+        if (loan.getDate() == null) {
+            loan.setDate(java.time.LocalDateTime.now());
+        }
         loanRepository.save(loan);
         return ResponseEntity.ok("Loan application submitted.");
     }
@@ -144,5 +156,12 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<List<Loan>> getUserLoans(String userId) {
         List<Loan> loans = loanRepository.findByUserId(userId);
         return ResponseEntity.ok(loans);
+    }
+
+    @Override
+    public ResponseEntity<String> getLoanStatus(String loanId) {
+        return loanRepository.findById(loanId)
+                .map(loan -> ResponseEntity.ok(loan.getStatus()))
+                .orElse(ResponseEntity.notFound().build());
     }
 }

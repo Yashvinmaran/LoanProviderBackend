@@ -14,9 +14,9 @@ public class LoanConfig {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5176","http://localhost:5175")
+                        .allowedOrigins("http://localhost:5176","http://localhost:5175","https://smart-loan-admin.vercel.app")
                         .allowedHeaders("Content-Type","Authorization")
-                        .allowedMethods("GET","POST","PUT","DELETE")
+                        .allowedMethods("GET","POST","PUT","DELETE","UPDATE")
                         .allowCredentials(true);
             }
         };
